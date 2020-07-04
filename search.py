@@ -29,7 +29,7 @@ def start_scrapping():
     else:
         entitytobeprocessed=10
 
-    return
+    
     id=0
     checkpoint=0
     filename=''
