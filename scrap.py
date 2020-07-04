@@ -8,7 +8,7 @@ import re
 import logging
 from requests.exceptions import Timeout
 
-IGNORE_LIST = r'wikipedia.org|books.google|linkedin|monster|jobstreet.com|wisdomjobs|naukari|sec.gov|sec.report|dl.bourse|fintel.io'
+IGNORE_LIST = r'wikipedia.org|books.google|linkedin|monster|jobstreet.com|wisdomjobs|naukari|sec.gov|sec.report|dl.bourse|fintel.io|ftp.cs.princeton.edu'
 IGNORE_LINKS_LIST = r'Annual|Financial-Report'
 # desktop user-agent
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
