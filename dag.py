@@ -15,7 +15,7 @@ def start_scrapping():
     #AIRFLOW_HOME = os.getenv('AIRFLOW_HOME')
     #print(AIRFLOW_HOME)
     #print(os.path.abspath("~/airflow/dags/articleextract.csv"))
-    writer = csv.writer(open('articleextract.csv', "w", encoding="utf-8"))
+    writer = csv.writer(open('/data/articleextract.csv', "w", encoding="utf-8"))
     writer.writerow(['entity','keyword','link','title', 'summarytext'])
     scrap = Scrap()
     entitycount=0

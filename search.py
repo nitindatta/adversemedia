@@ -9,14 +9,16 @@ import logging
 
 def start_scrapping():
     print('started processing')
-    keywords = ['"money laundering"','"market abuse" OR "market manipulation"','"insider trading"','"regulatory breach"','tax evasion','bribery OR smuggling or fraud or illegal or extortion'] # dynamic input, how ?
-    #keywords = ['"regulatory breach"'] # dynamic input, how ?
+    #keywords = ['"money laundering"','"market abuse" OR "market manipulation"','"insider trading"','"regulatory breach"','tax evasion','bribery OR smuggling or fraud or illegal or extortion'] # dynamic input, how ?
+    keywords = ['"regulatory breach"'] # dynamic input, how ?
     id=0
-    writer = csv.writer(open('articleextract1.csv', "w", encoding="utf-8"))
-    writer.writerow(['id','entity','keyword','link','title', 'summarytext'])
+    filerollover=100
+    filename=''
+    #writer = csv.writer(open(filename, "w", encoding="utf-8"))
+    
     scrap = Scrap()
     entitycount=0
-    with open('input.csv') as csv_file:    
+    with open('data/input.csv') as csv_file:    
         reader = csv.DictReader(csv_file, delimiter=',')
         for row in reader:
             id=row['id']
@@ -24,6 +26,11 @@ def start_scrapping():
             print('-------Started Processing: ' + entity)
             try:
                 scrapedentity=scrap.scrapEntitykeywordList(id,entity,keywords)
+                if (entitycount%filerollover==0):
+                    filename = 'data/articleextract{0}.csv'.format(int(entitycount/filerollover))
+                    print(filename)
+                    writer = csv.writer(open(filename, "w", encoding="utf-8"))
+                    writer.writerow(['id','entity','keyword','link','title', 'summarytext'])                    
                 if (scrapedentity!='error'):
                     writer.writerows(scrapedentity)
             except (requests.ConnectionError,requests.ConnectTimeout,requests.ReadTimeout):
