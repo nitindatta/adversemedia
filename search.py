@@ -7,7 +7,7 @@ import requests
 from requests.exceptions import Timeout,ReadTimeout
 import logging
 import argparse
-
+import math
 def start_scrapping():
     print('started processing')
     keywords = ['"money laundering"','"market abuse" OR "market manipulation"','"insider trading"','"regulatory breach"','tax evasion','bribery OR smuggling or fraud or illegal or extortion'] # dynamic input, how ?
@@ -15,6 +15,8 @@ def start_scrapping():
     ap = argparse.ArgumentParser()
     ap.add_argument("-f", "--foperand", required=False,help="file rollover")
     ap.add_argument("-t", "--soperand", required=False,help="entity to be processed")
+    ap.add_argument("-c", "--checkpoint", required=False,help="checkpoint to continue from")
+
     args = vars(ap.parse_args())
     
     if (args['foperand']):
@@ -29,7 +31,17 @@ def start_scrapping():
     else:
         entitytobeprocessed=10
 
-    
+    if (args['checkpoint']):
+        print('entitytobeprocessed:' + args['checkpoint'])
+        resumecheckpoint=int(args['checkpoint'])
+    else:
+        resumecheckpoint=0
+
+    if (resumecheckpoint>0):
+        filecounter=math.ceil(resumecheckpoint/filerollover)-1
+        filename = 'data/articleextract{0}.csv'.format(filecounter)       
+        writer = csv.writer(open(filename, "a", encoding="utf-8"))
+
     id=0
     checkpoint=0
     filename=''
@@ -46,13 +58,17 @@ def start_scrapping():
             print('-------Started Processing: ' + entity)
             print('-------Total Records Processed: ' + str(entitycount))
             try:
+                if (entitycount<resumecheckpoint):
+                    entitycount=entitycount+1
+                    continue
                 if (entitycount==entitytobeprocessed):
                     break
                 scrapedentity=scrap.scrapEntitykeywordList(id,entity,keywords)
+
                 if (entitycount%filerollover==0):
                     filename = 'data/articleextract{0}.csv'.format(int(entitycount/filerollover))
                     print(filename)
-                    writer = csv.writer(open(filename, "w", encoding="utf-8"))
+                    writer = csv.writer(open(filename, "a", encoding="utf-8"))
                     writer.writerow(['id','entity','keyword','link','title', 'summarytext'])                    
                 if (scrapedentity!='error'):
                     writer.writerows(scrapedentity)

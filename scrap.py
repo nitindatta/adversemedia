@@ -80,7 +80,7 @@ class Scrap:
                             yield [id,entity,keyword.strip('"'),link,extractedTitle, summarytext]
         else:
             self.errorcount=self.errorcount+1
-            self.logger.error("Non 200 response Error Processing %s and link %s",entity,link)
+            self.logger.error("Non 200 response Error Processing %s and link %s",entity,URL)
             return 'error'
     def scrapEntitykeywordList(self,id,entity,keywords):
         for key in keywords:
