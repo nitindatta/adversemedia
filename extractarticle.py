@@ -9,8 +9,8 @@ class ExtractArticle:
     def extractArticle(self,link):
         #self.response = requests.get(link)
         resp = requests.get(link,timeout=3,headers = {"user-agent": USER_AGENT})
-        if (resp.status_code==200):
-            contenttype=resp.headers['Content-Type']            
+        if (resp.status_code==200 and ('content-type' in resp.headers.keys())):
+            contenttype=resp.headers['content-type']            
             if (re.search(r'text/html',contenttype)):  
                 doc = Document(resp.text)
                 try:
