@@ -11,7 +11,9 @@ import math
 def start_scrapping():
     print('started processing')
     #keywords = ['"money laundering"','"market abuse" OR "market manipulation"','"insider trading"','"regulatory breach"','tax evasion','bribery OR smuggling or fraud or illegal or extortion'] # dynamic input, how ?
-    keywords = ['money laundering'] # dynamic input, how ?
+    keywords = ['"money laundering"','market abuse OR market manipulation','"insider trading"','regulatory breach','"tax evasion"'] # dynamic input, how ?
+
+    #keywords = ['money laundering'] # dynamic input, how ?
     ap = argparse.ArgumentParser()
     ap.add_argument("-f", "--foperand", required=False,help="file rollover")
     ap.add_argument("-p", "--soperand", required=False,help="pages to be processed")
