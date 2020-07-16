@@ -74,7 +74,7 @@ class ScrapNews:
                             extractedTitle=article.title
                             summarytext = BeautifulSoup(extractedSummary,features="lxml").get_text().rstrip("\n")
                                        
-                            title = g.find('h3').text
+                            title = g.find('JheGif nDgy9d').text
                             item = {
                                 "title": title,
                                 "link": link
