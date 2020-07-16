@@ -47,7 +47,7 @@ class ScrapNews:
             #check for trusted new site and implement custom logic for parsing.
             # for rest use library to get text as required.
             
-            for g in soup.find_all('div', class_='gG0TJc'):
+            for g in soup.find_all('div', class_='dbsr'):
                 anchors = g.find_all('a')
                 if anchors:            
                     link = anchors[0]['href']
