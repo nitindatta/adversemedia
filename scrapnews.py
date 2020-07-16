@@ -74,11 +74,11 @@ class ScrapNews:
                             extractedTitle=article.title
                             summarytext = BeautifulSoup(extractedSummary,features="lxml").get_text().rstrip("\n")
                                        
-                            title = g.find('JheGif nDgy9d').text
-                            item = {
-                                "title": title,
-                                "link": link
-                            }
+                            # title = g.find('h3').text
+                            # item = {
+                            #     "title": title,
+                            #     "link": link
+                            # }
                             self.links.append(link)
                             yield [id,pageno,keyword.strip('"'),link,extractedTitle, summarytext]
         else:
