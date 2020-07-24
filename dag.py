@@ -7,6 +7,7 @@ import os
 from scrap import Scrap
 
 def start_scrapping():
+    
     print('started processing')
     keywords = ["money laundering",'"market abuse" OR "market manipulation"',"insider trading","regulatory breach","tax evasion",'bribery OR smuggling","extortion","orgainzed crime"] # dynamic input, how ?
     #keywords = ["money laundering"] # dynamic input, how ?
