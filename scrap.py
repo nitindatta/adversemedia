@@ -69,7 +69,9 @@ class Scrap:
                         else:       
                             extractedSummary=article.summary
                             extractedTitle=article.title
-                            summarytext = BeautifulSoup(extractedSummary,features="lxml").get_text().rstrip("\n")
+                            extractedSummary=get_plain_text
+                            plaintext=get_plain_text(BeautifulSoup(extractedSummary,features="lxml"))
+                            summarytext = BeautifulSoup(plaintext,features="lxml").get_text()
                                        
                             title = g.find('h3').text
                             item = {
@@ -77,7 +79,7 @@ class Scrap:
                                 "link": link
                             }
                             self.links.append(link)
-                            yield [id,entity,keyword.strip('"'),link,extractedTitle, summarytext]
+                            yield [id,entity,keyword.strip('"'),link,extractedTitle, extractedSummary]
         else:
             self.errorcount=self.errorcount+1
             self.logger.error("Non 200 response Error Processing %s and link %s",entity,URL)
@@ -86,3 +88,21 @@ class Scrap:
         for key in keywords:
             for o in self.scrapEntity(id,entity,key) :
                 yield o
+    
+    def replace_with_newlines(element):
+        text = ''
+        for elem in element.recursiveChildGenerator():
+            if isinstance(elem, str):
+                text += elem.strip()
+            elif elem.name == 'br':
+                text += '\n'
+        return text
+
+
+    def get_plain_text(soup):
+        plain_text = ''
+        lines = soup.find("body")
+        for line in lines.findAll('p'):
+            line = replace_with_newlines(line)
+            plain_text+=line
+        return plain_text

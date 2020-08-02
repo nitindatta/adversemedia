@@ -79,8 +79,9 @@ def start_scrapping():
                 filename = 'data/articleextractnews{0}.csv'.format(int(int(pageno/filerollover)/10))
                 print(filename)
                 writer = csv.writer(open(filename, filemode, encoding="utf-8"))
-                writer.writerow(['id','pageno','keyword','link','title', 'summarytext'])                    
+                writer.writerow(['id','keyword','link','title', 'summarytext'])                    
             if (scrapedentity!='error'):
+                print(scrapedentity)
                 writer.writerows(scrapedentity)
 
         except (requests.ConnectionError,requests.ConnectTimeout,requests.ReadTimeout):

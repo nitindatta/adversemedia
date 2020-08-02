@@ -20,6 +20,7 @@ class ScrapNews:
     links=[]
     link=''
     errorcount=0
+    counter=100000
     ingnorelist=re.compile(IGNORE_LIST)
     ingnorelink=re.compile(IGNORE_LINKS_LIST)
     logger = logging.getLogger(__name__)
@@ -32,7 +33,6 @@ class ScrapNews:
         
         #query =  keyword +'+"' +entity +'"'
         #query = query.replace(' ', '+')
-        print(str(pageno))
         query="{0}&sxsrf=ALeKk03SaWrEuh1vZDxLQXk1bJUIwMSzIA:1594109560695&source=lnms&tbm=nws&sa=X&ved=2ahUKEwjaluTw2LrqAhXb8XMBHempA28Q_AUoAXoECBQQAw&biw=1280&bih=578&start={1}".format(keyword,str(pageno))
         URL = f"https://google.com/search?q={query}"
         #ingnorelist=('.wikipedia.org','.books.google.*')
@@ -51,6 +51,7 @@ class ScrapNews:
                 anchors = g.find_all('a')
                 if anchors:            
                     link = anchors[0]['href']
+                    #link='https://www.livingstondaily.com/story/news/local/2020/07/09/howell-area-woman-accused-embezzling-more-than-375-000/5404973002/'
                     parsed_uri = urlparse(link)
                     #optimize further to handle ignore url's
                     if not(link in self.links
@@ -72,7 +73,14 @@ class ScrapNews:
                         else:       
                             extractedSummary=article.summary
                             extractedTitle=article.title
-                            summarytext = BeautifulSoup(extractedSummary,features="lxml").get_text().rstrip("\n")
+                            #extractedSummary='<html><body><div><div class="gnt_ar_b"><figure class="gnt_em gnt_em__fp gnt_em_img"><img class="gnt_em_img_i" src="/636282189332826193-GettyImages-gavel.jpg" elementtiming="ar-lead-image" srcset="/636282189332826193-GettyImages-gavel.jpg" decoding="async" alt="Alicia Holbrook-Bloink is charged with numerous felonies including conducting a criminal enterprise and embezzlement."/><p class="gntd" data-c-caption="Alicia Holbrook-Bloink is charged with numerous felonies including conducting a criminal enterprise and embezzlement." data-c-credit="Getty Images/iStockphoto"/></figure>\n<p class="gnt_ar_b_p">A Livingston County insurance company owner defrauded clients of more than $375,000 from 2015 to 2018, a Michigan assistant attorney general testified in a hearing that led to charges Tuesday. </p>\n<p class="gnt_ar_b_p">Alicia Holbrook-Bloink, 44, used her insurance company, Holbrook Insurance Agency, LLC located on Dutcher Road in Iosco Township near Howell to embezzle $375,744, Assistant Attorney General Ashley Schwartz testified. </p>\n<p class="gnt_ar_b_p">Holbrook-Bloink, of Iosco Township, is charged with conducting a criminal enterprise and four counts of identity theft. She is also charged with two counts each of embezzlement of over $100,000 and false filing of a <i>tax return.</i> </p></div></div></body></html>'
+                            
+                            #extractedSummary='<html><body><div><div class="gnt_ar_b"><figure class="gnt_em gnt_em__fp gnt_em_img"><img class="gnt_em_img_i" src="/636282189332826193-GettyImages-gavel.jpg" elementtiming="ar-lead-image" srcset="/636282189332826193-GettyImages-gavel.jpg" decoding="async" alt="Alicia Holbrook-Bloink is charged with numerous felonies including conducting a criminal enterprise and embezzlement."/><p class="gntd" data-c-caption="Alicia Holbrook-Bloink is charged with numerous felonies including conducting a criminal enterprise and embezzlement." data-c-credit="Getty Images/iStockphoto"/></figure>\n<p class="gnt_ar_b_p">A Livingston County insurance company owner defrauded clients of more than $375,000 from 2015 to 2018, a Michigan assistant attorney general testified in a hearing that led to charges Tuesday. </p><p class="gnt_ar_b_p">Alicia Holbrook-Bloink, 44, used her insurance company, Holbrook Insurance Agency, LLC located on Dutcher Road in Iosco Township near Howell to embezzle $375,744, Assistant Attorney General Ashley Schwartz testified. </p><p class="gnt_ar_b_p">Holbrook-Bloink, of Iosco Township, is charged with conducting a criminal enterprise and four counts of identity theft. She is also charged with two counts each of embezzlement of over $100,000 and false filing of a <br>tax return. </p></div></div></body></html>'
+                            extractedSummary=extractedSummary.replace('</p>','</p>\n',extractedSummary.count('</p>')-1).replace('<br>','\n')
+
+                            #print(extractedSummary)
+                            summarytext = BeautifulSoup(extractedSummary,features="lxml").get_text()
+                            #print(summarytext)
                                        
                             # title = g.find('h3').text
                             # item = {
@@ -80,7 +88,8 @@ class ScrapNews:
                             #     "link": link
                             # }
                             self.links.append(link)
-                            yield [id,pageno,keyword.strip('"'),link,extractedTitle, summarytext]
+                            self.counter=self.counter+1
+                            yield [self.counter,keyword.strip('"'),link,extractedTitle, summarytext]
         else:
             self.errorcount=self.errorcount+1
             self.logger.error("Non 200 response Error Processing %s and link %s",pageno,URL)
@@ -89,3 +98,4 @@ class ScrapNews:
         for key in keywords:
             for o in self.scrapEntity(id,pageno,key) :
                 yield o
+

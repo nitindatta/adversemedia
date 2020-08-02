@@ -141,3 +141,4 @@ data/articleextract*.csv
 checkpoint.txt
 data/inputdata.csv
 data/inputoriginal.csv
+data/task*.csv
